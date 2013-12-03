@@ -1,0 +1,22 @@
+--- origsrc/LibRaw-0.15.3/configure.ac	2013-11-28 23:04:11.928066000 -0600
++++ src/LibRaw-0.15.3/configure.ac	2013-11-28 23:15:44.859699400 -0600
+@@ -16,7 +16,7 @@ AC_SUBST(LIBTOOL_DEPS)
+ 
+ # Config files to generate
+ 
+-CPPFLAGS="$CPPFLAGS -I/usr/local/include"
++CPPFLAGS="$CPPFLAGS -I/usr/local/include -DLIBRAW_BUILDLIB"
+ LDFLAGS="$LDFLAGS -L/usr/local/lib"
+ 
+ AC_CONFIG_FILES([
+--- origsrc/LibRaw-0.15.3/libraw/libraw_types.h	2013-07-03 22:26:01.000000000 -0500
++++ src/LibRaw-0.15.3/libraw/libraw_types.h	2013-11-28 23:08:51.855076900 -0600
+@@ -81,7 +81,7 @@ typedef unsigned char uchar;
+ typedef unsigned short ushort;
+ 
+ #ifdef WIN32
+-#ifdef LIBRAW_NODLL
++#if defined(LIBRAW_NODLL) || (defined(LIBRAW_BUILDLIB) && !defined(PIC))
+ # define DllDef
+ #else
+ # ifdef LIBRAW_BUILDLIB

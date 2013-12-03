@@ -1,0 +1,37 @@
+CROSS_HOST="x86_64-w64-mingw32"
+inherit cross
+
+NAME="mingw64-x86_64-libraw"
+VERSION=0.15.3
+RELEASE=1
+CATEGORY="Devel"
+SUMMARY="RAW file library for Win64 toolchain"
+DESCRIPTION="LibRaw is a library for reading RAW files obtained from digital
+photo cameras (CRW/CR2, NEF, RAF, DNG, and others)."
+HOMEPAGE="http://www.libraw.org/"
+SRC_URI="http://www.libraw.org/data/LibRaw-${VERSION}.tar.gz
+	 http://www.libraw.org/data/LibRaw-demosaic-pack-GPL2-${VERSION}.tar.gz
+	 http://www.libraw.org/data/LibRaw-demosaic-pack-GPL3-${VERSION}.tar.gz"
+SRC_DIR="LibRaw-${VERSION}"
+PATCH_URI="
+	0.14.1-demosaic-vpath.patch
+	0.15.3-dllexport.patch
+"
+
+# put demosaic packs under $S for debuginfo
+CYGPORT_USE_UNSTABLE_API=1
+src_unpack_hook() {
+	rm -fr LibRaw-demosaic-pack-*
+	mv ../LibRaw-demosaic-pack-GPL2-${VERSION} LibRaw-demosaic-pack-GPL2
+	mv ../LibRaw-demosaic-pack-GPL3-${VERSION} LibRaw-demosaic-pack-GPL3
+}
+
+CYGCONF_ARGS="--disable-examples"
+# gomp: this should be handled by -fopenmp, but libtool's insistance on
+#       commandeering the CXX link breaks it
+# ws2_32: for ntohl, etc.; handled in other buildsystems but not in autotools
+LIBS="-lgomp -lws2_32"
+
+DOCS="LICENSE.* README.*"
+
+KEEP_LA_FILES="none"
