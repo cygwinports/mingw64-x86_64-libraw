@@ -2,7 +2,7 @@ CROSS_HOST="x86_64-w64-mingw32"
 inherit cross
 
 NAME="mingw64-x86_64-libraw"
-VERSION=0.15.4
+VERSION=0.16.2
 RELEASE=1
 CATEGORY="Devel"
 SUMMARY="RAW file library for Win64 toolchain"
