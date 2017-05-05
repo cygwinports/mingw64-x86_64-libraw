@@ -2,7 +2,7 @@ CROSS_HOST="x86_64-w64-mingw32"
 inherit cross
 
 NAME="mingw64-x86_64-libraw"
-VERSION=0.16.2
+VERSION=0.18.2
 RELEASE=1
 CATEGORY="Devel"
 SUMMARY="RAW file library for Win64 toolchain"
@@ -14,8 +14,10 @@ SRC_URI="http://www.libraw.org/data/LibRaw-${VERSION}.tar.gz
 	 http://www.libraw.org/data/LibRaw-demosaic-pack-GPL3-${VERSION}.tar.gz"
 SRC_DIR="LibRaw-${VERSION}"
 PATCH_URI="
+	http://pkgs.fedoraproject.org/cgit/rpms/LibRaw.git/plain/LibRaw-0.6.0-pkgconfig.patch
+	http://pkgs.fedoraproject.org/cgit/rpms/LibRaw.git/plain/LibRaw-0.17.1-CVE-2015-8366-8367.patch
 	0.14.1-demosaic-vpath.patch
-	0.15.3-dllexport.patch
+	0.18.2-dllexport.patch
 "
 
 # put demosaic packs under $S for debuginfo
@@ -26,6 +28,8 @@ src_unpack_hook() {
 	mv ../LibRaw-demosaic-pack-GPL3-${VERSION} LibRaw-demosaic-pack-GPL3
 }
 
+# for jasper/jas_math.h
+CPPFLAGS+=" -D__STDC_LIMIT_MACROS"
 CYGCONF_ARGS="--disable-examples"
 # gomp: this should be handled by -fopenmp, but libtool's insistance on
 #       commandeering the CXX link breaks it
@@ -33,5 +37,3 @@ CYGCONF_ARGS="--disable-examples"
 LIBS="-lgomp -lws2_32"
 
 DOCS="LICENSE.* README.*"
-
-KEEP_LA_FILES="none"
